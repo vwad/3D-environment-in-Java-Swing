@@ -17,11 +17,7 @@ public class Main extends JFrame{
         SwingUtilities.invokeAndWait(Main::new);
     }
 
-
-    private Vec3 pos = new Vec3(0,0,2);
-    private Vec3 upVec = new Vec3(0,1,0);
-    private Vec3 orient = new Vec3(0,0,1);
-    private int barSize = 100;
+    private int barSize = GlobalConfig.BAR_SIZE;
 
     public Main() {
         setLayout(null);
@@ -35,13 +31,16 @@ public class Main extends JFrame{
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
 
-        MouseController mc = new MouseController(dim.width, dim.height);
-        addKeyListener(mc);
+        CursorUpdater cu = new CursorUpdater(this);
+        KeyController kc = new KeyController();
+        MouseController mc = new MouseController(dim.width, dim.height,cu);
+        addKeyListener(kc);
         addMouseMotionListener(mc);
         addMouseListener(mc);
+        
 
         Model m = new Model();
-        JPanel panel = new PaintPanel(m.getPoints(),m.getLines(),dim,mc);
+        JPanel panel = new PaintPanel(m.getPoints(),m.getLines(),dim,mc,kc);
         add(panel);
 
         JPanel bar1 = new JPanel();
@@ -63,17 +62,18 @@ public class Main extends JFrame{
     private class PaintPanel extends JPanel {
 
         private MouseController mc;
+
         private float[][] points;
         private float[][] lines;
         private float width;
         private float height;
-        private float speed = 5f;
-        private float FOV = 55f;
-        private float near = 0.15f;
-        private float far = 150f;
+
+        private Vec3 pos = new Vec3(0,0,2);
+        private Vec3 upVec = new Vec3(0,1,0);
+        private Vec3 orient = new Vec3(0,0,1);
 
 
-        private PaintPanel(float[][] points, float[][] lines, Dimension dim, MouseController mc) {
+        private PaintPanel(float[][] points, float[][] lines, Dimension dim, MouseController mc, KeyController kc) {
             this.points = points;
             this.lines = lines;
             this.width = dim.width;
@@ -85,7 +85,7 @@ public class Main extends JFrame{
             setLocation(0,barSize);
             setBackground(Color.darkGray);
 
-            int FPS = 60;
+            int FPS = GlobalConfig.FPS;
             final long[] lastTime = {System.nanoTime()};
             Timer animation = new Timer(1000/FPS,a-> {
 
@@ -95,8 +95,8 @@ public class Main extends JFrame{
 
                 lastTime[0] = currentTime;
 
-                float currSpeed = speed*dt;
-                pos = mc.updatePos(pos, upVec, orient, currSpeed);
+                float currSpeed = GlobalConfig.SPEED*dt;
+                pos = kc.updatePos(pos, upVec, orient, currSpeed);
 
                 repaint();
             });
@@ -122,11 +122,11 @@ public class Main extends JFrame{
 
             Vec3 look = Vec3.add(pos, orient);
 
-            Matrix4 proj = Matrix4.perspective(FOV,width/height,near,far);
+            Matrix4 proj = Matrix4.perspective(GlobalConfig.FOV,width/height,GlobalConfig.NEAR,GlobalConfig.FAR);
             Matrix4 cam = Matrix4.lookAt(pos, look, upVec);
             Matrix4 view = Matrix4.multiply(proj,cam);
             
-            InversePainter.draw(lines, points, view, width, height, g2);
+            PainterAlgorithm.draw(lines, points, view, width, height, g2);
 
         }
 

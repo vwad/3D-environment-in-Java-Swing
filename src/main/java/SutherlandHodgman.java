@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class PolygonClipper {
+public class SutherlandHodgman {
     
     public static List<Vec4> clipFace(List<Vec4> face) {
         if (face.isEmpty()) return face;

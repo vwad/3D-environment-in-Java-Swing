@@ -82,6 +82,17 @@ public class Matrix4 {
         return new Vec4(x, y, z, w);
     }
 
+    public static Vec4 multiplyByMat(float[] f, Matrix4 m) {
+        Vec4 v = new Vec4(f[0],f[1],f[2],1.0f);
+        float[][] mt = m.mat4;
+        float x = mt[0][0] * v.x + mt[0][1] * v.y + mt[0][2] * v.z + mt[0][3] * v.w;
+        float y = mt[1][0] * v.x + mt[1][1] * v.y + mt[1][2] * v.z + mt[1][3] * v.w;
+        float z = mt[2][0] * v.x + mt[2][1] * v.y + mt[2][2] * v.z + mt[2][3] * v.w;
+        float w = mt[3][0] * v.x + mt[3][1] * v.y + mt[3][2] * v.z + mt[3][3] * v.w;
+
+        return new Vec4(x, y, z, w);
+    }
+
     public static Vec4 project(float[] point, Matrix4 view) {
         Vec4 vertPos = new Vec4(point[0],point[1],point[2],1f);
 
