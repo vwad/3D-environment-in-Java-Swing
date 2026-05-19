@@ -1,7 +1,7 @@
 public class GlobalConfig {
-    public static final int FPS = 60;
+    public static final int FPS = 170;
     public static final float SPEED = 5;
-    public static final float FOV = 55f;
+    public static final float FOV = 120f;
     public static final float NEAR = 0.15f;
     public static final float FAR = 150f;
     public static final float MOUSE_SENSITIVITY = 0.005f;

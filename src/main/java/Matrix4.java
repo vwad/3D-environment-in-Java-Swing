@@ -33,7 +33,7 @@ public class Matrix4 {
     }
 
     public static Matrix4 perspective(float fovDegrees, float aspect,float near, float far) {
-        float proj = (float) (1.0/(Math.tan(Math.toRadians(fovDegrees))));
+        float proj = (float) (1.0/(Math.tan(Math.toRadians(fovDegrees/2))));
 
         float dist = near-far;
         float A = (far+near)/dist;

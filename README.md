@@ -5,4 +5,5 @@ A learning purpose project in order to implement certain Computer Graphics relat
 For example:
 * Sutherland-Hodgman
 * Painter ALgorithm
-* Projection Matrix
+* Orthographic Projection Matrix
+* Perspective Matrix
